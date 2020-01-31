@@ -1,6 +1,6 @@
 # Packer Examples - Using packer to create OS images
 
-## Introdução
+## Introduction
 
 To use this repository and create several OS images, we'll need these follows applications installed:
 
