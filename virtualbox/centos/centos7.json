@@ -1,7 +1,7 @@
 {
     "variables": {
-        "iso": "http://mirror.globo.com/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso",
-        "checksum": "6ffa7ad44e8716e4cd6a5c3a85ba5675a935fc0448c260f43b12311356ba85ad",
+        "iso": "http://ftp.unicamp.br/pub/centos/7/isos/x86_64/CentOS-7-x86_64-Minimal-1908.iso",
+        "checksum": "9a2c47d97b9975452f7d582264e9fc16d108ed8252ac6816239a3b58cef5c53d",
         "checksum_type": "sha256",
         "headless": "false",
         "cpus": "2",
@@ -10,7 +10,7 @@
         "hard_drive_interface": "sata",
         "hostname": "centos",
         "domain": "localhost",
-        "ssh_user": "cgaspar",
+        "ssh_user": "root",
         "ssh_pass": "123456"
     },
 
@@ -31,8 +31,7 @@
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
             ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
             ["modifyvm", "{{.Name}}", "--audio", "none"],
-            ["modifyvm", "{{.Name}}", "--nic1", "bridged"],
-            ["modifyvm", "{{.Name}}", "--bridgeadapter1", "enp3s0"]
+            ["modifyvm", "{{.Name}}", "--nic1", "nat", "--nictype1", "virtio"]
         ],
         "http_directory": "http",
         "ssh_username": "{{user `ssh_user`}}",
@@ -40,7 +39,7 @@
         "ssh_timeout": "20m",
         "ssh_pty": true,
         "shutdown_command": "sudo systemctl poweroff",
-        "boot_wait": "2s",
+        "boot_wait": "5s",
         "boot_command": [
             "<esc>",
             "<wait>",
@@ -48,5 +47,4 @@
             "<enter>"
         ]
     }]
-
 }
