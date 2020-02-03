@@ -48,10 +48,18 @@
         ]
     }],
 
-    "provisioners": [{
-        "type": "shell",
-        "scripts": [
-            "scripts/update.sh"
-        ]
-    }]
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "/home/cgaspar/.ssh/id_rsa.pub",
+            "destination": "/root/id_rsa.pub"
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/update.sh",
+                "scripts/sshd.sh"
+            ]
+        }
+    ]
 }
