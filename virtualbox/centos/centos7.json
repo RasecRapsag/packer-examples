@@ -46,5 +46,12 @@
             "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg biosdevname=0 net.ifnames=0",
             "<enter>"
         ]
+    }],
+
+    "provisioners": [{
+        "type": "shell",
+        "scripts": [
+            "scripts/update.sh"
+        ]
     }]
 }
