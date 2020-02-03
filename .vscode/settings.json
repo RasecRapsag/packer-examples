@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        ".vscode/": true,
+        "**/packer_cache/": true,
+        "**/*-output/": true,
+        ".directory": true
+    },
+    "blade.format.enable": true,
+    "emmet.triggerExpansionOnTab": true
+}
