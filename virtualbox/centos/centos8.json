@@ -46,6 +46,21 @@
             "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos8-ks.cfg biosdevname=0 net.ifnames=0",
             "<enter>"
         ]
-    }]
-
+    }],
+    
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "/home/cgaspar/.ssh/id_rsa.pub",
+            "destination": "/root/id_rsa.pub"
+        },
+        {
+            "type": "shell",
+            "scripts": [
+                "scripts/update.sh",
+                "scripts/sshd.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ]
 }
