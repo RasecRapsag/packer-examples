@@ -2,7 +2,8 @@
     "files.exclude": {
         ".vscode/": true,
         "**/packer_cache/": true,
-        "**/*-output/": true,
+        "**/builds/": true,
+        "**/.vagrant": true,
         ".directory": true
     },
     "blade.format.enable": true,
