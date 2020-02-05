@@ -1,7 +1,7 @@
 {
     "variables": {
-        "iso": "http://ftp.unicamp.br/pub/centos/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso",
-        "checksum": "6ffa7ad44e8716e4cd6a5c3a85ba5675a935fc0448c260f43b12311356ba85ad",
+        "iso": "http://ftp.unicamp.br/pub/centos/8/isos/x86_64/CentOS-8.1.1911-x86_64-boot.iso",
+        "checksum": "7fea13202bf2f26989df4175aace8fdc16e1137f7961c33512cbfad844008948",
         "checksum_type": "sha256",
         "headless": "false",
         "cpus": "2",
@@ -21,7 +21,7 @@
         "iso_checksum": "{{user `checksum`}}",
         "iso_checksum_type": "{{user `checksum_type`}}",
         "output_directory": "builds",
-        "vm_name": "centos-7.7-x86_64-packer",
+        "vm_name": "centos8-x86_64-packer",
         "headless": "{{user `headless`}}",
         "disk_size": "{{user `disk_size`}}",
         "hard_drive_discard": "true",
@@ -43,24 +43,9 @@
         "boot_command": [
             "<esc>",
             "<wait>",
-            "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos7-ks.cfg biosdevname=0 net.ifnames=0",
+            "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos8-ks.cfg biosdevname=0 net.ifnames=0",
             "<enter>"
         ]
-    }],
+    }]
 
-    "provisioners": [
-        {
-            "type": "file",
-            "source": "/home/cgaspar/.ssh/id_rsa.pub",
-            "destination": "/root/id_rsa.pub"
-        },
-        {
-            "type": "shell",
-            "scripts": [
-                "scripts/update.sh",
-                "scripts/sshd.sh",
-                "scripts/cleanup.sh"
-            ]
-        }
-    ]
 }
