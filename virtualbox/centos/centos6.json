@@ -20,7 +20,7 @@
         "iso_url": "{{user `iso`}}",
         "iso_checksum": "{{user `checksum`}}",
         "iso_checksum_type": "{{user `checksum_type`}}",
-        "output_directory": "builds",
+        "output_directory": "builds/centos6",
         "vm_name": "centos6-x86_64-packer",
         "headless": "{{user `headless`}}",
         "disk_size": "{{user `disk_size`}}",
