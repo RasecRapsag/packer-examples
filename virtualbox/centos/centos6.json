@@ -1,7 +1,7 @@
 {
     "variables": {
-        "iso": "http://ftp.unicamp.br/pub/centos/8/isos/x86_64/CentOS-8.1.1911-x86_64-boot.iso",
-        "checksum": "7fea13202bf2f26989df4175aace8fdc16e1137f7961c33512cbfad844008948",
+        "iso": "http://ftp.unicamp.br/pub/centos/6/isos/x86_64/CentOS-6.10-x86_64-netinstall.iso",
+        "checksum": "56f7b078a3b443095ba006cdc85319c691251cda98c5d73d12ef6db7aff6b4c1",
         "checksum_type": "sha256",
         "headless": "true",
         "cpus": "2",
@@ -21,7 +21,7 @@
         "iso_checksum": "{{user `checksum`}}",
         "iso_checksum_type": "{{user `checksum_type`}}",
         "output_directory": "builds",
-        "vm_name": "centos8-x86_64-packer",
+        "vm_name": "centos6-x86_64-packer",
         "headless": "{{user `headless`}}",
         "disk_size": "{{user `disk_size`}}",
         "hard_drive_discard": "true",
@@ -38,16 +38,13 @@
         "ssh_password": "{{user `ssh_pass`}}",
         "ssh_timeout": "20m",
         "ssh_pty": true,
-        "shutdown_command": "sudo systemctl poweroff",
+        "shutdown_command": "/sbin/halt -h -p",
         "boot_wait": "5s",
         "boot_command": [
-            "<esc>",
-            "<wait>",
-            "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos8-ks.cfg biosdevname=0 net.ifnames=0",
-            "<enter>"
+            "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos6-ks.cfg<enter><wait>"
         ]
     }],
-    
+
     "provisioners": [
         {
             "type": "file",
