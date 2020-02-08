@@ -1,0 +1,62 @@
+{
+    "variables": {
+        "iso": "http://debian.pop-sc.rnp.br/mirror/debian-cd/current/amd64/iso-cd/debian-10.2.0-amd64-netinst.iso",
+        "checksum": "e43fef979352df15056ac512ad96a07b515cb8789bf0bfd86f99ed0404f885f5",
+        "checksum_type": "sha256",
+        "headless": "false",
+        "cpus": "2",
+        "memory": "1024",
+        "disk_size": "20000",
+        "hard_drive_interface": "sata",
+        "hostname": "debian",
+        "domain": "localhost",
+        "ssh_user": "vagrant",
+        "ssh_pass": "vagrant"
+    },
+
+    "builders": [{
+        "type": "virtualbox-iso",
+        "guest_os_type": "Debian_64",
+        "iso_url": "{{user `iso`}}",
+        "iso_checksum": "{{user `checksum`}}",
+        "iso_checksum_type": "{{user `checksum_type`}}",
+        "output_directory": "builds/debian10",
+        "vm_name": "debian10-x86_64-packer",
+        "headless": "{{user `headless`}}",
+        "disk_size": "{{user `disk_size`}}",
+        "hard_drive_discard": "true",
+        "hard_drive_nonrotational": "true",
+        "hard_drive_interface": "{{user `hard_drive_interface`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--audio", "none"],
+            ["modifyvm", "{{.Name}}", "--nic1", "nat", "--nictype1", "virtio"]
+        ],
+        "http_directory": "http",
+        "ssh_username": "{{user `ssh_user`}}",
+        "ssh_password": "{{user `ssh_pass`}}",
+        "ssh_timeout": "20m",
+        "ssh_pty": true,
+        "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+        "boot_wait": "5s",
+        "boot_command": [
+            "<esc><wait>",
+            "install <wait>",
+            " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/debian10.cfg <wait>",
+            "debian-installer=en_US.UTF-8 <wait>",
+            "auto <wait>",
+            "locale=en_US.UTF-8 <wait>",
+            "kbd-chooser/method=us <wait>",
+            "keyboard-configuration/xkb-keymap=us <wait>",
+            "netcfg/get_hostname={{user `hostname`}} <wait>",
+            "netcfg/get_domain={{user `domain`}} <wait>",
+            "fb=false <wait>",
+            "debconf/frontend=noninteractive <wait>",
+            "console-setup/ask_detect=false <wait>",
+            "console-keymaps-at/keymap=us <wait>",
+            "grub-installer/bootdev=/dev/sda <wait>",
+            "<enter><wait>"
+          ]
+    }]    
+}
