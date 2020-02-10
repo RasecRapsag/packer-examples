@@ -1,0 +1,66 @@
+{
+    "variables": {
+        "iso": "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.3-server-amd64.iso",
+        "checksum": "7d8e0055d663bffa27c1718685085626cb59346e7626ba3d3f476322271f573e",
+        "checksum_type": "sha256",
+        "headless": "false",
+        "cpus": "2",
+        "memory": "1024",
+        "disk_size": "20000",
+        "hard_drive_interface": "sata",
+        "hostname": "ubuntu",
+        "domain": "localhost",
+        "ssh_user": "ubuntu",
+        "ssh_pass": "123456"
+    },
+
+    "builders": [{
+        "type": "virtualbox-iso",
+        "guest_os_type": "Ubuntu_64",
+        "iso_url": "{{user `iso`}}",
+        "iso_checksum": "{{user `checksum`}}",
+        "iso_checksum_type": "{{user `checksum_type`}}",
+        "output_directory": "builds/ubuntu18.04",
+        "vm_name": "ubuntu-18.04-x86_64-packer",
+        "headless": "{{user `headless`}}",
+        "disk_size": "{{user `disk_size`}}",
+        "hard_drive_discard": "true",
+        "hard_drive_nonrotational": "true",
+        "hard_drive_interface": "{{user `hard_drive_interface`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--audio", "none"],
+            ["modifyvm", "{{.Name}}", "--nic1", "nat", "--nictype1", "virtio"]
+        ],
+        "http_directory": "http",
+        "ssh_username": "{{user `ssh_user`}}",
+        "ssh_password": "{{user `ssh_pass`}}",
+        "ssh_timeout": "20m",
+        "ssh_pty": true,
+        "shutdown_command": "echo {{user `ssh_pass`}} | sudo -S shutdown -P now",
+        "boot_wait": "5s",
+        "boot_command": [
+            "<esc><esc><enter>",
+            "/install/vmlinuz auto",
+            " console-setup/ask_detect=false",
+            " console-setup/layoutcode=us",
+            " console-setup/modelcode=pc105",
+            " debconf/frontend=noninteractive",
+            " debian-installer=en_US",
+            " fb=false",
+            " initrd=/install/initrd.gz",
+            " kbd-chooser/method=us",
+            " keyboard-configuration/layout=USA",
+            " keyboard-configuration/variant=USA",
+            " locale=en_US",
+            " domain={{user `domain`}}",
+            " hostname={{user `hostname`}}",
+            " grub-installer/bootdev=/dev/sda",
+            " noapic",
+            " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+            " -- ",
+            "<enter>"
+          ]
+    }]	
+}
