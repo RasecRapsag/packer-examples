@@ -10,7 +10,7 @@
         "hard_drive_interface": "sata",
         "hostname": "ubuntu",
         "domain": "localhost",
-        "ssh_user": "ubuntu",
+        "ssh_user": "packer",
         "ssh_pass": "123456"
     },
 
@@ -45,8 +45,6 @@
             "/install/vmlinuz auto",
             " console-setup/ask_detect=false",
             " console-setup/layoutcode=us",
-            " console-setup/modelcode=pc105",
-            " debconf/frontend=noninteractive",
             " debian-installer=en_US",
             " fb=false",
             " initrd=/install/initrd.gz",
@@ -58,9 +56,8 @@
             " hostname={{user `hostname`}}",
             " grub-installer/bootdev=/dev/sda",
             " noapic",
-            " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
-            " -- ",
-            "<enter>"
+            " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu10.04.cfg",
+            " -- <enter>"
           ]
     }]	
 }
