@@ -59,5 +59,25 @@
             " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu10.04.cfg",
             " -- <enter>"
           ]
-    }]	
+    }],
+
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "/home/cgaspar/.ssh/id_rsa.pub",
+            "destination": "/home/packer/id_rsa.pub"
+        },
+        {
+            "type": "shell",
+            "scripts": "scripts/sshd.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo '123456' | sudo -S -E bash '{{.Path}}'",
+            "scripts": [
+                "scripts/update.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ]
 }
