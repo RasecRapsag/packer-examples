@@ -1,0 +1,55 @@
+{
+    "variables": {
+        "proxmox_url": "https://pve.middle.earth/api2/json",
+        "username": "root@pam",
+        "password": "123456",
+        "node": "fangorn",
+        "iso_file": "CentOS-8.1.1911-x86_64-boot.iso",
+        "pool": "Templates",
+        "vm_id": "901",
+        "cores": "2",
+        "memory": "1024",
+        "disk_size": "10G",
+        "ssh_user": "root",
+        "ssh_pass": "123456"
+    },
+
+    "builders": [{
+        "type": "proxmox",
+        "proxmox_url": "{{user `proxmox_url`}}",
+        "insecure_skip_tls_verify": true,
+        "username": "{{user `username`}}",
+        "password": "{{user `password`}}",
+        "node": "{{user `node`}}",
+        "iso_file": "local:iso/{{user `iso_file`}}",
+        "unmount_iso": true,
+        
+        "cores": "{{user `cores`}}",
+        "cpu_type": "host",
+        "memory": "{{user `memory`}}",
+        "network_adapters": [{
+            "model": "virtio",
+            "bridge": "vmbr0"
+        }],
+        "disks": [{
+            "type": "virtio",
+            "disk_size": "{{user `disk_size`}}",
+            "storage_pool": "local-lvm",
+            "storage_pool_type": "lvm"
+        }],
+        "qemu_agent": true,
+        "template_name": "centos8-packer",
+        "template_description": "CentOS 8 Packer, generated on {{ isotime \"2020-02-13T18:00:00\" }}",
+        "pool": "{{user `pool`}}",
+        "vm_id": "{{user `vm_id`}}",
+
+        "http_directory":"http",
+        "ssh_username": "{{user `ssh_user`}}",
+        "ssh_password": "{{user `ssh_pass`}}",
+        "ssh_timeout": "15m",
+        "boot_wait": "5s",
+        "boot_command": [
+          "<up><tab> ip=dhcp inst.cmdline inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos.cfg<enter>"
+        ]    
+    }]
+  }

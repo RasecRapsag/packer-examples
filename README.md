@@ -2,12 +2,14 @@
 
 ## Introduction
 
-To use this repository and create several OS images, we'll need these follows applications installed:
+To use this repository and create several OS images, we'll need these follows applications:
 
 * [Packer](https://www.packer.io)
 * [VirtualBox](https://www.virtualbox.org)
-* [CentOS](https://www.centos.org/)
+* [CentOS](https://www.centos.org)
+* [Debian](https://www.debian.org)
 * [Ubuntu](https://ubuntu.com/download/server)
+* [Proxmox](https://www.proxmox.com)
 
 ### Installing Packer on Linux
 
