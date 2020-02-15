@@ -11,7 +11,8 @@
         "memory": "1024",
         "disk_size": "10G",
         "ssh_user": "packer",
-        "ssh_pass": "123456"
+        "ssh_pass": "123456",
+        "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
     },
 
     "builders": [{
@@ -39,7 +40,7 @@
         }],
         "qemu_agent": true,
         "template_name": "ubuntu18.04-packer",
-        "template_description": "Ubuntu 18.04 Packer, generated on {{ isotime \"2020-02-13T15:04:05\" }}",
+        "template_description": "Ubuntu 18.04 Packer, generated on {{ isotime \"2006-01-02T15:04:05\" }}",
         "pool": "{{user `pool`}}",
         "vm_id": "{{user `vm_id`}}",
 
@@ -56,6 +57,18 @@
             " auto=true priority=critical",
             " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu.cfg",
             "<enter>"
-          ]
-    }]
+        ]
+    }],
+    
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "{{user `id_rsa`}}",
+            "destination": "/home/packer/id_rsa.pub"
+        },
+        {
+            "type": "shell",
+            "scripts": "scripts/sshd.sh"
+        }
+    ]
   }

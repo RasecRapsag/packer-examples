@@ -11,7 +11,8 @@
         "memory": "1024",
         "disk_size": "10G",
         "ssh_user": "root",
-        "ssh_pass": "123456"
+        "ssh_pass": "123456",
+        "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
     },
 
     "builders": [{
@@ -39,7 +40,7 @@
         }],
         "qemu_agent": true,
         "template_name": "centos8-packer",
-        "template_description": "CentOS 8 Packer, generated on {{ isotime \"2020-02-13T18:00:00\" }}",
+        "template_description": "CentOS 8 Packer, generated on {{ isotime \"2006-01-02T15:04:05\" }}",
         "pool": "{{user `pool`}}",
         "vm_id": "{{user `vm_id`}}",
 
@@ -51,5 +52,17 @@
         "boot_command": [
           "<up><tab> ip=dhcp inst.cmdline inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos.cfg<enter>"
         ]    
-    }]
+    }],
+    
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "{{user `id_rsa`}}",
+            "destination": "/root/id_rsa.pub"
+        },
+        {
+            "type": "shell",
+            "scripts": "scripts/sshd.sh"
+        }
+    ]
   }
