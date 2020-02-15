@@ -3,15 +3,15 @@
         "iso": "http://cdimage.ubuntu.com/ubuntu/releases/bionic/release/ubuntu-18.04.3-server-amd64.iso",
         "checksum": "7d8e0055d663bffa27c1718685085626cb59346e7626ba3d3f476322271f573e",
         "checksum_type": "sha256",
-        "headless": "false",
+        "headless": "true",
         "cpus": "2",
         "memory": "1024",
         "disk_size": "20000",
         "hard_drive_interface": "sata",
-        "hostname": "ubuntu",
-        "domain": "localhost",
         "ssh_user": "packer",
-        "ssh_pass": "123456"
+        "ssh_pass": "123456",
+        "os": "ubuntu18.04",
+        "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
     },
 
     "builders": [{
@@ -20,8 +20,8 @@
         "iso_url": "{{user `iso`}}",
         "iso_checksum": "{{user `checksum`}}",
         "iso_checksum_type": "{{user `checksum_type`}}",
-        "output_directory": "builds/ubuntu18.04",
-        "vm_name": "ubuntu-18.04-x86_64-packer",
+        "output_directory": "builds/{{user `os`}}",
+        "vm_name": "{{user `os`}}-x86_64-packer",
         "headless": "{{user `headless`}}",
         "disk_size": "{{user `disk_size`}}",
         "hard_drive_discard": "true",
@@ -41,30 +41,20 @@
         "shutdown_command": "echo {{user `ssh_pass`}} | sudo -S shutdown -P now",
         "boot_wait": "5s",
         "boot_command": [
-            "<esc><esc><enter>",
-            "/install/vmlinuz auto",
-            " console-setup/ask_detect=false",
-            " console-setup/layoutcode=us",
-            " debian-installer=en_US",
-            " fb=false",
-            " initrd=/install/initrd.gz",
-            " kbd-chooser/method=us",
-            " keyboard-configuration/layout=USA",
-            " keyboard-configuration/variant=USA",
-            " locale=en_US",
-            " domain={{user `domain`}}",
-            " hostname={{user `hostname`}}",
-            " grub-installer/bootdev=/dev/sda",
-            " noapic",
-            " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu10.04.cfg",
-            " -- <enter>"
-          ]
+            "<esc><wait>",
+            "<esc><wait>",
+            "<enter><wait>",
+            "/install/vmlinuz initrd=/install/initrd.gz",
+            " auto=true priority=critical",
+            " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `os`}}.cfg",
+            " <enter>"
+        ]
     }],
 
     "provisioners": [
         {
             "type": "file",
-            "source": "/home/cgaspar/.ssh/id_rsa.pub",
+            "source": "{{user `id_rsa`}}",
             "destination": "/home/packer/id_rsa.pub"
         },
         {
@@ -73,9 +63,9 @@
         },
         {
             "type": "shell",
-            "execute_command": "echo '123456' | sudo -S -E bash '{{.Path}}'",
+            "execute_command": "echo {{user `ssh_pass`}} | sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "scripts/update.sh",
+                "scripts/apt.sh",
                 "scripts/cleanup.sh"
             ]
         }
