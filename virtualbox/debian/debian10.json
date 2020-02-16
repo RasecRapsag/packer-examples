@@ -1,0 +1,68 @@
+{
+    "variables": {
+        "iso": "http://debian.pop-sc.rnp.br/mirror/debian-cd/current/amd64/iso-cd/debian-10.2.0-amd64-netinst.iso",
+        "checksum": "e43fef979352df15056ac512ad96a07b515cb8789bf0bfd86f99ed0404f885f5",
+        "checksum_type": "sha256",
+        "headless": "true",
+        "cpus": "2",
+        "memory": "1024",
+        "disk_size": "20000",
+        "hard_drive_interface": "sata",
+        "ssh_user": "packer",
+        "ssh_pass": "123456",
+        "os": "debian10",
+        "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
+    },
+
+    "builders": [{
+        "type": "virtualbox-iso",
+        "guest_os_type": "Debian_64",
+        "iso_url": "{{user `iso`}}",
+        "iso_checksum": "{{user `checksum`}}",
+        "iso_checksum_type": "{{user `checksum_type`}}",
+        "output_directory": "builds/{{user `os`}}",
+        "vm_name": "{{user `os`}}-x86_64-packer",
+        "headless": "{{user `headless`}}",
+        "disk_size": "{{user `disk_size`}}",
+        "hard_drive_discard": "true",
+        "hard_drive_nonrotational": "true",
+        "hard_drive_interface": "{{user `hard_drive_interface`}}",
+        "vboxmanage": [
+            ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
+            ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
+            ["modifyvm", "{{.Name}}", "--audio", "none"],
+            ["modifyvm", "{{.Name}}", "--nic1", "nat", "--nictype1", "virtio"]
+        ],
+        "http_directory": "http",
+        "ssh_username": "{{user `ssh_user`}}",
+        "ssh_password": "{{user `ssh_pass`}}",
+        "ssh_timeout": "20m",
+        "ssh_pty": true,
+        "shutdown_command": "echo {{user `ssh_pass`}} |sudo -S shutdown -P now",
+        "boot_wait": "5s",
+        "boot_command": [
+            "<esc><wait>",
+            "auto url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `os`}}.cfg<enter>"
+        ]
+    }],
+
+    "provisioners": [
+        {
+            "type": "file",
+            "source": "{{user `id_rsa`}}",
+            "destination": "/home/packer/id_rsa.pub"
+        },
+        {
+            "type": "shell",
+            "scripts": "scripts/sshd.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo {{user `ssh_pass`}} | sudo -S -E bash '{{.Path}}'",
+            "scripts": [
+                "scripts/apt.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ]
+}
