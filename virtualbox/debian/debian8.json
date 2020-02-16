@@ -1,7 +1,7 @@
 {
     "variables": {
-        "iso": "http://debian.pop-sc.rnp.br/mirror/debian-cd/current/amd64/iso-cd/debian-10.2.0-amd64-netinst.iso",
-        "checksum": "e43fef979352df15056ac512ad96a07b515cb8789bf0bfd86f99ed0404f885f5",
+        "iso": "https://cdimage.debian.org/cdimage/archive/8.11.1/amd64/iso-cd/debian-8.11.1-amd64-netinst.iso",
+        "checksum": "ea444d6f8ac95fd51d2aedb8015c57410d1ad19b494cedec6914c17fda02733c",
         "checksum_type": "sha256",
         "headless": "true",
         "cpus": "2",
@@ -10,7 +10,7 @@
         "hard_drive_interface": "sata",
         "ssh_user": "packer",
         "ssh_pass": "123456",
-        "os": "debian10",
+        "os": "debian8",
         "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
     },
 
@@ -31,7 +31,9 @@
             ["modifyvm", "{{.Name}}", "--cpus", "{{user `cpus`}}"],
             ["modifyvm", "{{.Name}}", "--memory", "{{user `memory`}}"],
             ["modifyvm", "{{.Name}}", "--audio", "none"],
-            ["modifyvm", "{{.Name}}", "--nic1", "nat", "--nictype1", "virtio"]
+            ["modifyvm", "{{.Name}}", "--nic1", "nat", "--nictype1", "virtio"],
+            ["createmedium", "disk", "--filename", "{{user `os`}}.vmdk", "--format", "vmdk", "--size", "{{user `disk_size`}}"],
+            ["storageattach", "{{.Name}}" , "--storagectl", "SATA Controller", "--port", "1", "--device", "0", "--type", "hdd", "--medium", "{{user `os`}}.vmdk"]
         ],
         "http_directory": "http",
         "ssh_username": "{{user `ssh_user`}}",

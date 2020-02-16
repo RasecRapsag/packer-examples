@@ -1,7 +1,7 @@
 {
     "variables": {
-        "iso": "http://debian.pop-sc.rnp.br/mirror/debian-cd/current/amd64/iso-cd/debian-10.2.0-amd64-netinst.iso",
-        "checksum": "e43fef979352df15056ac512ad96a07b515cb8789bf0bfd86f99ed0404f885f5",
+        "iso": "https://cdimage.debian.org/cdimage/archive/9.12.0/amd64/iso-cd/debian-9.12.0-amd64-netinst.iso",
+        "checksum": "3c47f64693435b0b42b6ef59624edbffa7c4004317d9f9a3f04ecb6a4e30f191",
         "checksum_type": "sha256",
         "headless": "true",
         "cpus": "2",
@@ -10,7 +10,7 @@
         "hard_drive_interface": "sata",
         "ssh_user": "packer",
         "ssh_pass": "123456",
-        "os": "debian10",
+        "os": "debian9",
         "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
     },
 
