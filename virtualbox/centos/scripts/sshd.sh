@@ -1,7 +1,8 @@
 #!/bin/bash
 
-mkdir -p /root/.ssh
-cat /root/id_rsa.pub >> /root/.ssh/authorized_keys
+mkdir -p ~/.ssh
+cat ~/id_rsa.pub >> ~/.ssh/authorized_keys
+rm -f ~/id_rsa.pub
 
-chmod 700 /root/.ssh
-chmod 600 /root/.ssh/authorized_keys
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys

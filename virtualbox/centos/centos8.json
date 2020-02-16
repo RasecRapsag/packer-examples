@@ -8,10 +8,10 @@
         "memory": "1024",
         "disk_size": "20000",
         "hard_drive_interface": "sata",
-        "hostname": "centos",
-        "domain": "localhost",
-        "ssh_user": "root",
-        "ssh_pass": "123456"
+        "ssh_user": "packer",
+        "ssh_pass": "123456",
+        "os": "centos8",
+        "id_rsa": "/home/cgaspar/.ssh/id_rsa.pub"
     },
 
     "builders": [{
@@ -20,8 +20,8 @@
         "iso_url": "{{user `iso`}}",
         "iso_checksum": "{{user `checksum`}}",
         "iso_checksum_type": "{{user `checksum_type`}}",
-        "output_directory": "builds/centos8",
-        "vm_name": "centos8-x86_64-packer",
+        "output_directory": "builds/{{user `os`}}",
+        "vm_name": "{{user `os`}}-x86_64-packer",
         "headless": "{{user `headless`}}",
         "disk_size": "{{user `disk_size`}}",
         "hard_drive_discard": "true",
@@ -38,12 +38,12 @@
         "ssh_password": "{{user `ssh_pass`}}",
         "ssh_timeout": "20m",
         "ssh_pty": true,
-        "shutdown_command": "sudo systemctl poweroff",
+        "shutdown_command": "echo {{user `ssh_pass`}} | sudo -S systemctl poweroff",
         "boot_wait": "5s",
         "boot_command": [
             "<esc>",
             "<wait>",
-            "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/centos8-ks.cfg biosdevname=0 net.ifnames=0",
+            "linux inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/{{user `os`}}.cfg biosdevname=0 net.ifnames=0",
             "<enter>"
         ]
     }],
@@ -51,14 +51,18 @@
     "provisioners": [
         {
             "type": "file",
-            "source": "/home/cgaspar/.ssh/id_rsa.pub",
-            "destination": "/root/id_rsa.pub"
+            "source": "{{user `id_rsa`}}",
+            "destination": "/home/packer/id_rsa.pub"
         },
         {
             "type": "shell",
+            "scripts": "scripts/sshd.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo {{user `ssh_pass`}} | sudo -S -E bash '{{.Path}}'",
             "scripts": [
-                "scripts/update.sh",
-                "scripts/sshd.sh",
+                "scripts/yum.sh",
                 "scripts/cleanup.sh"
             ]
         }
